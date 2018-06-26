@@ -1,0 +1,13 @@
+<launch>
+
+	
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+	<include file="$(find audio_capture)/launch/capture_wave.launch"/>
+
+
+	<node name="movement" pkg="qt_robot_movement" type="qt_robot_movement_node" output="screen" cwd="node"/>
+	<node name="camera_rgb" pkg="cv_camera" type="cv_camera_node" output="screen" cwd="node"/>
+	<node name="ros_handler" pkg="test_thomas" type="test.py" output="screen" cwd="node"/>
+	
+
+</launch>
