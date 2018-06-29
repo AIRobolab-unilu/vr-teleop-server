@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from std_msgs.msg import Int32, Int32MultiArray, String
+from sensor_msgs.msg import PointCloud2, Image
+from sensor_msgs import point_cloud2 as pc2
 import rospy
 from audio_common_msgs.msg import AudioData
 import contextlib    
@@ -7,7 +9,9 @@ import wave
 import json
 from threading import Thread
 import struct
-from test_thomas.srv import * 
+from vr_teleop_server.srv import * 
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
 
 class ROSSide():
     def __init__(self):
@@ -19,6 +23,7 @@ class ROSSide():
         self.init_motors_values()
 
         self.motor = [2, 0, 50]
+        self.bridge = CvBridge()
 
         #self.motors = {'neck_h': 0, 'neck_v': 1, 'left_arm_h': 2, 'left_arm_v': 3,
         #'left_elbow': 4, 'right_arm_h': 5, 'right_arm_v ': 6, 'left_elbow': 7}
@@ -27,6 +32,45 @@ class ROSSide():
         self.pub_movement = rospy.Publisher('qt_movement/localMovement', Int32MultiArray, queue_size=10)
         #rospy.Service('increment_motor', IncrementMotor, self.increment_callback)
         self.listener()
+
+    def process_depth(self, msg):
+        #x : offset: 0 datatype: FLOAT32 count: 1
+        #y : offset: 4 datatype: FLOAT32 count: 1
+        #z : offset: 8 datatype: FLOAT32 count: 1
+        #rgb : offset: 16 datatype: FLOAT32 count : 1
+
+        #Length of a point in bytes : 32
+        #Length of a row in bytes : 20480
+
+        #height : 480
+        #width : 640
+
+        #points = pc2.read_points(msg, field_names = ("x", "y", "z"), skip_nans=True)
+
+        #for point in points:
+            #x, y, z = point
+            #print '------'
+            #print x
+            #print y
+            #print z
+
+        #print 'got it'
+        #print msg.point_step
+        #print msg.row_step
+        #print msg.fields
+
+
+        #Encoding of pixels : 16UC1
+        #Full row length in bytes : 1280
+
+        msg.encoding = 'mono16'
+        print msg.step
+
+        cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='mono16')
+        #print msg.data
+        print type(cv_image)
+        print cv_image[:]
+        cv2.imwrite('test.png', cv_image)
 
     def init_motors_values(self):
         for key, values in self.motors.iteritems():
@@ -126,6 +170,8 @@ class ROSSide():
         rospy.Subscriber("teleop/motor", Int32, self.motor_callback)
         rospy.Subscriber("audio", AudioData, self.audio_callback)
         rospy.Subscriber("teleop/increment/motor", String, self.increment_motor_callback)
+        rospy.Subscriber("camera/depth/image_rect_raw", Image, self.process_depth)
+        print "ok"
         rospy.spin()
 
 if __name__ == '__main__':

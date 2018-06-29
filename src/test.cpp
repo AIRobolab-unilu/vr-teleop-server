@@ -33,8 +33,6 @@
 #include "std_msgs/Int32MultiArray.h"
 #include <sstream>
 
-#include <yarp/os/all.h>
-using namespace yarp::os;
 
 #include <string>
 #include <sstream>
@@ -98,7 +96,6 @@ int main(int argc, char **argv)
     srand (time(NULL));
         
     v_neckposition = -1;    
-    yarp::os::Network yarpInst;
   
     ros::init(argc, argv, "game");
 

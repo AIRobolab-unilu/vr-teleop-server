@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(vr-teleop-server)
+project(vr_teleop_server)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -14,7 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
-  YARP REQUIRED
 )
 
 ## System dependencies are found with CMake's conventions
@@ -121,7 +120,6 @@ CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 ## Your package locations should be listed before other locations
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  ${YARP_INCLUDE_DIRS}
 
 )
 
@@ -153,7 +151,6 @@ add_executable(test_thomas_node src/test.cpp)
 ## Specify libraries to link a library or executable target against
  target_link_libraries(test_thomas_node
    ${catkin_LIBRARIES}
-     ${YARP_LIBRARIES}
 
  )
 

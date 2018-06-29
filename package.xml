@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>vr-teleop-server</name>
+  <name>vr_teleop_server</name>
   <version>0.0.0</version>
   <description>The test_thomas package</description>
 
