@@ -29,9 +29,49 @@ class ROSSide():
         #'left_elbow': 4, 'right_arm_h': 5, 'right_arm_v ': 6, 'left_elbow': 7}
 
         self.pub_audio = rospy.Publisher('teleop/audio', AudioData, queue_size=10)
+        self.pub_info = rospy.Publisher('teleop/motors/info', String, queue_size=10)
         self.pub_movement = rospy.Publisher('qt_movement/localMovement', Int32MultiArray, queue_size=10)
         #rospy.Service('increment_motor', IncrementMotor, self.increment_callback)
         self.listener()
+
+        self.run()
+
+    def run(self):
+        rate = rospy.Rate(4) # 2z
+        while not rospy.is_shutdown():
+
+
+            for key, values in self.motors.iteritems():
+
+                values['value'] = values['home'] 
+
+            self.pub_info.publish('{}:{}:{}:{}:{}:{}:{}:{}'.format(
+                self.motors['neck_h']['value'], self.motors['neck_v']['value'], self.motors['left_arm_h']['value'], self.motors['left_arm_v']['value'],
+                self.motors['left_elbow']['value'], self.motors['right_arm_h']['value'], self.motors['right_arm_v']['value'], self.motors['left_elbow']['value']))
+
+
+            rate.sleep()
+
+    def process_cloud(self, msg):
+
+        points = list(pc2.read_points(msg, field_names = ("x", "y", "z"), skip_nans=True))
+
+        point = points[len(points)//2]
+        x, y, z = point
+        print '------'
+        print x
+        print y
+        print z
+
+        #for point in points:
+            #x, y, z = point
+            #print '------'
+            #print x
+            #print y
+            #print z
+            #break
+
+        print 'got it'
 
     def process_depth(self, msg):
         #x : offset: 0 datatype: FLOAT32 count: 1
@@ -170,9 +210,11 @@ class ROSSide():
         rospy.Subscriber("teleop/motor", Int32, self.motor_callback)
         rospy.Subscriber("audio", AudioData, self.audio_callback)
         rospy.Subscriber("teleop/increment/motor", String, self.increment_motor_callback)
-        rospy.Subscriber("camera/depth/image_rect_raw", Image, self.process_depth)
-        print "ok"
-        rospy.spin()
+        #rospy.Subscriber("camera/depth/image_rect_raw", Image, self.process_depth)
+        rospy.Subscriber("camera/depth_registered/points", PointCloud2, self.process_cloud)
+
+        #print "ok"
+        #rospy.spin()
 
 if __name__ == '__main__':
     

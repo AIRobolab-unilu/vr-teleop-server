@@ -1,10 +1,10 @@
 {
-"neck_h": {"id": 0, "min": -90, "max": 90, "home": -5},
-"neck_v": {"id": 1, "min": -18, "max": 18, "home": -10},
-"left_arm_h": {"id": 2, "min": -140, "max": 140, "home": -86},
-"left_arm_v": {"id": 3, "min": -70, "max": 0, "home": -60},
-"left_elbow": {"id": 4, "min": -80, "max": -20, "home": 0},
-"right_arm_h": {"id": 5, "min": -130, "max": 130, "home": 93},
-"right_arm_v": {"id": 6, "min": -60, "max": 0, "home": -60},
-"left_elbow": {"id": 7, "min": -70, "max": 0, "home": -20}
+"neck_h": 		{"id": 0, "min": -90, "max": 90, "home": -5},
+"neck_v": 		{"id": 1, "min": -18, "max": 18, "home": -10},
+"left_arm_h": 	{"id": 2, "min": -140, "max": 140, "home": -86},
+"left_arm_v": 	{"id": 3, "min": -70, "max": 0, "home": -60},
+"left_elbow": 	{"id": 4, "min": -80, "max": -20, "home": 0},
+"right_arm_h":	{"id": 5, "min": -130, "max": 130, "home": 93},
+"right_arm_v": 	{"id": 6, "min": -60, "max": 0, "home": -60},
+"left_elbow": 	{"id": 7, "min": -70, "max": 0, "home": -20}
 }
