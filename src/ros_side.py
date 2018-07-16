@@ -118,7 +118,7 @@ class ROSSide():
 
     def increment_motor_callback(self, msg):
 
-        print msg.data
+        print "motor received " + str(msg.data)
 
         tmp = msg.data.split()
 

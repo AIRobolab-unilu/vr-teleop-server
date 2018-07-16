@@ -75,9 +75,9 @@ class Status():
 
             self.pub.publish(msg)
 
-            print msg
+            #print msg
 
-            print '###########'
+            #print '###########'
 
 
             rate.sleep()
