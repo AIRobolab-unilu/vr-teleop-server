@@ -131,15 +131,16 @@ class ROSSide():
         value = float(tmp[2])
 
         if mode == 'p': #Percentage
-            if value > 100 or value < 0:
+            if value > 100 or value < -100:
                 return
-            motor['value'] = (value/100)*(motor['max']-motor['min'])+motor['min']
+            motor['value'] = (value/100)*(motor['max']-motor['min'])/2
         elif mode == 'i': #Increment
             motor['value'] += value
             if motor['value'] > motor['max']:
                 motor['value'] = motor['max']
             elif motor['value'] < motor['min']:
                 motor['value'] = motor['min']
+
         self.move_motor(motor['id'], motor['value'])
 
     def move_motor(self, motor, value):
