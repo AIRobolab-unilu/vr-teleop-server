@@ -6,6 +6,12 @@
 	<include file="$(find realsense_camera)/launch/sr300_nodelet_rgbd.launch"/>
 
 	<node name="movement" pkg="qt_robot_movement" type="qt_robot_movement_node" output="screen" cwd="node"/>
+
+
+
+	<param name="camera_rgb/image_width" type="int" value="1280" />
+	<param name="camera_rgb/image_height" type="int" value="720" />
+
 	<node name="camera_rgb" pkg="cv_camera" type="cv_camera_node" output="screen" cwd="node"/>
 	<node name="ros_handler" pkg="vr_teleop_server" type="ros_side.py" output="screen" cwd="node"/>
 	<node name="status" pkg="vr_teleop_server" type="status_node.py" output="screen" cwd="node"/>
