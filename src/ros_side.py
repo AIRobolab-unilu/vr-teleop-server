@@ -46,11 +46,14 @@ class ROSSide():
                 values['value'] = values['home'] 
 
             self.pub_info.publish('{}:{}:{}:{}:{}:{}:{}:{}'.format(
-                self.motors['neck_h']['value'], self.motors['neck_v']['value'], self.motors['left_arm_h']['value'], self.motors['left_arm_v']['value'],
-                self.motors['left_elbow']['value'], self.motors['right_arm_h']['value'], self.motors['right_arm_v']['value'], self.motors['left_elbow']['value']))
+                self.format('neck_h'), self.format('neck_v'), self.format('left_arm_h'), self.format('left_arm_v'),
+                self.format('left_elbow'), self.format('right_arm_h'), self.format('right_arm_v'), self.format('left_elbow')))
 
 
             rate.sleep()
+
+    def format(self, motor):
+        return '{}/{}'.format(self.motors[motor]['name'], self.motors[motor]['value'])
 
     def process_cloud(self, msg):
 
