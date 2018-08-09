@@ -1,27 +1,11 @@
 #!/usr/bin/env python
-import rospy
-from geometry_msgs.msg import Twist
-from std_msgs.msg import String
+import herkulex
+from herkulex import servo
 
+#connect to the serial port
+herkulex.connect("/dev/ttyUSB0", 115200)
 
+#scan for servos, it returns a tuple with servo id & model number
+servos = herkulex.scan_servos()
 
-def b(msg):
-	print msg.data
-     #print msg.linear.x
-     #print msg.linear.y
-     #print msg.linear.z
-
-def a(msg):
-	print msg.linear.x
-	print msg.linear.y
-	print msg.linear.z
-
-#rospy.Subscriber("test", Twist, a)
-
-rospy.Subscriber("a", Twist, a)
-rospy.Subscriber("b", String, b)
-
-#rospy.Subscriber("teleop/increment/motor", String, a)
-
-rospy.init_node("test")
-rospy.spin()
+print servos
