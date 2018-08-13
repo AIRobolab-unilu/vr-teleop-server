@@ -19,7 +19,7 @@ class ROSSide():
 
         self.buff = None
         self.counter = 0
-        self.speed = 1000
+        self.speed = 50
         self.motors = self.load_json('../data/motors.json')
         self.init_motors_values()
 
@@ -121,12 +121,19 @@ class ROSSide():
 
         print "motor received " + str(msg.data)
 
+        if msg.data == 'reset':
+            for key, values in self.motors.iteritems():
+                values['value'] = values['home'] 
+                self.move_motor(values['id'], values['value'])
+            return
+
         tmp = msg.data.split()
 
         mode = tmp[0]
 
         motor =  self.motors.get(tmp[1])
         if motor is None:
+            print 'Motor is None'
             return
 
         value = float(tmp[2])
@@ -135,23 +142,23 @@ class ROSSide():
         if mode == 'p': #Percentage
             if value > 100 or value < -100:
                 return
-            new_value = (value/100)*(motor['max']-motor['min'])/2
+            new_value = (value/100)*(motor['max']-motor['min'])+motor['min']
         elif mode == 'i': #Increment
             new_value += value
             if new_value > motor['max']:
                 new_value= motor['max']
             elif new_value < motor['min']:
                 new_value = motor['min']
-        elif mode == 'a': #Absolue
+        elif mode == 'a': #Absolute
             new_value = value
             if new_value > motor['max']:
                 new_value = motor['max']
             elif new_value < motor['min']:
                 new_value = motor['min']
         
-        #Discard the value if the movemebt is too litlle, to avoid overflooding
+        #Discard the value if the movement is too litlle, to avoid overflooding
         if abs(new_value-motor['value'])<5:
-            #print 'Discard the command'
+            print 'Discard the command'
             return
 
         motor['value'] = new_value
