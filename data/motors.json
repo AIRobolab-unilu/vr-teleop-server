@@ -1,10 +1,10 @@
 {
 "neck_h": 		{"id": 0, "min": -90, "max": 90, "home": -5, "name": "Horizontal Neck"},
 "neck_v": 		{"id": 1, "min": 37, "max": -2, "home": 27, "name": "Vertical Neck"},
-"left_arm_h": 	{"id": 2, "min": -140, "max": 140, "home": -86}, "name": "Left Arm 1",
+"left_arm_h": 	{"id": 2, "min": -140, "max": 140, "home": -86, "name": "Left Arm 1"},
 "left_arm_v": 	{"id": 3, "min": -70, "max": 3, "home": -70, "name": "Left Arm 2"},
 "left_elbow": 	{"id": 4, "min": -80, "max": 0, "home": 0, "name": "Left Elbow"},
-"right_arm_h":	{"id": 5, "min": -138, "max": 145, "home": 90}, "name": "Right Arm 1",
+"right_arm_h":	{"id": 5, "min": -138, "max": 145, "home": 90, "name": "Right Arm 1"},
 "right_arm_v": 	{"id": 6, "min": -73, "max": 3, "home": -70, "name": "Right Arm 2"},
 "right_elbow": 	{"id": 7, "min": -79, "max": 0, "home": 0, "name": "Right Elbow"}
 }
