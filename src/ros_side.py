@@ -19,6 +19,7 @@ class ROSSide():
 
         self.buff = None
         self.counter = 0
+        self.speed = 50
         self.motors = self.load_json('../data/motors.json')
         self.init_motors_values()
 
@@ -41,9 +42,9 @@ class ROSSide():
         while not rospy.is_shutdown():
 
 
-            for key, values in self.motors.iteritems():
+            #for key, values in self.motors.iteritems():
 
-                values['value'] = values['home'] 
+                #values['value'] = values['home'] 
 
             self.pub_info.publish('{}:{}:{}:{}:{}:{}:{}:{}'.format(
                 self.format('neck_h'), self.format('neck_v'), self.format('left_arm_h'), self.format('left_arm_v'),
@@ -123,31 +124,53 @@ class ROSSide():
 
         print "motor received " + str(msg.data)
 
+        if msg.data == 'reset':
+            for key, values in self.motors.iteritems():
+                values['value'] = values['home'] 
+                self.move_motor(values['id'], values['value'])
+            return
+
         tmp = msg.data.split()
 
         mode = tmp[0]
 
         motor =  self.motors.get(tmp[1])
         if motor is None:
+            print 'Motor is None'
             return
 
         value = float(tmp[2])
+        new_value = motor['value']
 
         if mode == 'p': #Percentage
-            if value > 100 or value < 0:
+            if value > 100 or value < -100:
                 return
-            motor['value'] = (value/100)*(motor['max']-motor['min'])+motor['min']
+            new_value = (value/100)*(motor['max']-motor['min'])+motor['min']
         elif mode == 'i': #Increment
-            motor['value'] += value
-            if motor['value'] > motor['max']:
-                motor['value'] = motor['max']
-            elif motor['value'] < motor['min']:
-                motor['value'] = motor['min']
+            new_value += value
+            if new_value > motor['max']:
+                new_value= motor['max']
+            elif new_value < motor['min']:
+                new_value = motor['min']
+        elif mode == 'a': #Absolute
+            new_value = value
+            if new_value > motor['max']:
+                new_value = motor['max']
+            elif new_value < motor['min']:
+                new_value = motor['min']
+        
+        #Discard the value if the movement is too litlle, to avoid overflooding
+        if abs(new_value-motor['value'])<5:
+            print 'Discard the command'
+            return
+
+        motor['value'] = new_value
         self.move_motor(motor['id'], motor['value'])
 
     def move_motor(self, motor, value):
+
         print 'publishing {} to the motor {}'.format(value, motor)
-        self.pub_movement.publish(Int32MultiArray(data=[motor, value, 50]))
+        self.pub_movement.publish(Int32MultiArray(data=[motor, value, self.speed]))
 
 
     def load_json(self, path):
@@ -205,7 +228,7 @@ class ROSSide():
         self.pub_audio.publish(AudioData(tmp))
         
         self.tmp_buff = None
-        print 'sent'
+        #print 'sent'
         
         
     def listener(self):

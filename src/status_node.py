@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 
+
 from std_msgs.msg import String
-from motivational_component.srv import * 
+
+
 import psutil
 import os
 
@@ -21,8 +23,20 @@ class Status():
         self.status_motors = ""
 
         self.pub = rospy.Publisher('teleop/status', String, queue_size=10)
+        
+        self.service_error = False
+        try:
+            from motivational_component.srv import * 
+        except ImportError:
+            print 'Please install the package "motivational_component"'
+            self.service_error = True
 
-        self.variable_info = rospy.ServiceProxy('variable_info', VariableInfo)
+        if not self.service_error:
+            try:
+                self.variable_info = rospy.ServiceProxy('variable_info', VariableInfo)
+                self.variable_info('pain')#test the call for error
+            except:
+                self.service_error = True
 
         self.run()
 
@@ -52,13 +66,15 @@ class Status():
 
 
     def get_status_emotions(self):
-        
-        status = '{}:{}:{}:{}'.format(self.format("pain"), self.format("curiosity"),
+        if not self.service_error:
+
+            status = '{}:{}:{}:{}'.format(self.format("pain"), self.format("curiosity"),
                                  self.format("frustration"), self.format("fatigue"))
 
         #print status
 
-        return status
+            return status
+        return 'no package'
 
     def run(self):
 
